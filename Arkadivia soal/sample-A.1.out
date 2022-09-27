@@ -1,0 +1,200 @@
+using System;
+
+namespace Praktikum4
+{
+	/// <summary>
+	/// Description of graph.
+	/// </summary>
+	public class graph
+	{
+		int[,] Graph;
+		int[,] GraphEdgeWeight;
+		int V,E,Q;
+		public graph()
+		{
+			// membaca input baris pertama
+			String input = Console.ReadLine();
+			String[] inputSplitted = input.Split(' ');
+
+			V = int.Parse(inputSplitted[0]); // mengeset angka pertama input menjadi V
+			E = int.Parse(inputSplitted[1]); // mengeset angka kedua input menjadi E
+
+			Graph = new int[V, V]; // membuat array 2d graph untuk menyimpan vertex mana saja yang terhubung
+			GraphEdgeWeight = new int[V, V]; // membuat array 2d untuk menyimpan bobot edge nya
+
+			for (int i = 0; i < E; i++)
+			{
+				String input2 = Console.ReadLine();
+				String[] inputSplitted2 = input2.Split(' ');
+
+				int u = int.Parse(inputSplitted2[0]);
+				int v = int.Parse(inputSplitted2[1]);
+				int w = int.Parse(inputSplitted2[2]);
+
+				Graph[u, v] = 1; // jika terhubung mengeset menjadi 1
+				Graph[v, u] = 1;
+				GraphEdgeWeight[u, v] = w;
+				GraphEdgeWeight[v, u] = w;
+			}
+
+			Q = int.Parse(Console.ReadLine());
+			Console.WriteLine();
+		}
+
+		public void AdjacencyMatrix()
+		{
+			Console.WriteLine("Adjacency Matrix");
+			
+			// membuat heading nya
+			Console.Write("    ");
+			int count = 0;
+			for (int i = 0; i < V * 2; i++)
+			{
+				if (i % 2 == 0)
+				{
+					Console.Write(count);
+					count++;
+				}
+				else
+				{
+					Console.Write(" ");
+				}
+			}
+			Console.WriteLine();
+			
+			// mengeprint adjacency matrix nya
+			for (int i = 0; i < V; i++)
+			{
+				Console.Write((i) + " | ");
+				for (int j = 0; j < V; j++)
+				{
+					Console.Write(GraphEdgeWeight[i, j] + " ");
+				}
+				Console.WriteLine();
+			}
+			Console.WriteLine();
+		}
+
+		public void AdjacencyList()
+		{
+			Console.WriteLine("Adjacency List");
+			for (int i = 0; i < V; i++)
+			{
+				Console.Write(i + " --> ");
+				for (int j = 0; j < V; j++)
+				{
+					// mengecek apakah vertex i dan j terhubung
+					if (Graph[i, j] == 1)
+					{
+						// jika terhubung maka menampilkan vertex beserta bobotnya
+						Console.Write(j + "(" + GraphEdgeWeight[i, j] + ") ");
+					}
+				}
+				Console.WriteLine();
+			}
+			Console.WriteLine();
+		}
+
+		public void DegreeOfVertex()
+		{
+			Console.WriteLine("Degree of Vertex");
+			for (int i = 0; i < V; i++)
+			{
+				int degree = 0; // menyimpan jumlah edge yang terhubung dengan vertex i
+				for (int j = 0; j < V; j++)
+				{
+					// mengecek apakah vertex i dan j terhubung
+					if (Graph[i, j] == 1)
+					{
+						degree++; // jika terhubung maka degree ditambah 1
+					}
+				}
+				Console.WriteLine("Degree of Vertex " + i + " = " + degree); // menampilkan vertex beserta degreenya
+			}
+			Console.WriteLine();
+		}
+
+		public void DjikstraAlgorithm() 
+		{ 
+			int[] jarak_terpendek = new int[V]; // membuat array menyimpan jarak terpendek sesuai jumlah vertex
+			bool[] cek = new bool[V]; // membuat array boolean untuk mengecek apakah vertex sudah dikunjungi
+
+			for (int i = 0; i < V; i++) 
+			{ 
+				jarak_terpendek[i] = int.MaxValue; // mengeset jarak terpendeknya infinity
+				cek[i] = false; // mengeset kunjungannya false
+			} 
+
+			jarak_terpendek[Q] = 0; // mengeset jarak terpendeknya vertex awal 0
+
+			int[] parents = new int[V]; // array parent menyimpan jalur terpendek 
+
+			parents[Q] = -1; // bukan parrent
+
+			// Mencari jalur terpendek untuk semua vertex
+			for (int i = 1; i < V; i++) 
+			{ 
+
+				// Pilih jarak vertex minimum 
+				int Vertex_terdekat = -1; 
+				int min = int.MaxValue; 
+				
+				for (int j = 0; j < V; j++) 
+				{ 
+					// mengecek apakah cek false dan jarak terpendek kurang dari minimum
+					if (!cek[j] && jarak_terpendek[j] < min) 
+					{ 
+						//jika iya, vertex terdekat diganti dengan j
+						Vertex_terdekat = j; 
+						// minimum diganti jarak terpendek
+						min = jarak_terpendek[j]; 
+					} 
+				}	 
+				
+				// menandai true untuk vertex yang sudah dikunjungi
+				cek[Vertex_terdekat] = true; 
+
+				// memperbarui nilai jarak terpendek ditambah dengan bobot vertex untuk mendapatkan total jarak bobotnya
+				for (int j = 0; j < V; j++) 
+				{ 
+					// mengecek apakah vertex terhubung dan minimum ditambah bobotnya kurang dari jarak terpendek
+					if (Graph[Vertex_terdekat,j] == 1 && ((min + GraphEdgeWeight[Vertex_terdekat,j]) < jarak_terpendek[j])) 
+					{ 
+						// mengeset parent nya menjadi vertex terdekat
+						parents[j] = Vertex_terdekat; 
+						// mengeset jarak terpendeknya menjadi minimum ditambah bobot edge penghubung kedua vertex
+						jarak_terpendek[j] = min + GraphEdgeWeight[Vertex_terdekat,j]; 
+					} 
+				} 
+			} 
+			
+			// mengeprint hasil
+			Console.WriteLine("Dijkstra Algorithm");
+			for (int i = 0; i < V; i++) 
+			{ 
+				if (i != Q) 
+				{ 
+					Console.Write(Q + " --> " + i + " : " + Q); 
+					printPath(i, parents);
+					Console.Write(" (total: "+ jarak_terpendek[i] + ")"+"\n");
+				} 
+			}
+			Console.WriteLine("\n");
+		} 
+
+		private void printPath(int currentVertex, int[] parents) 
+		{ 
+			// mengecek apakah current vertex bukan parentnya
+			if (currentVertex == -1) // -1 menunjukkan bukan parrent
+			{ 
+				return; // jika bukan parentnya maka berhenti rekursi dan keluar dari method
+			}
+		
+			printPath(parents[currentVertex], parents);
+			if(currentVertex != Q) {
+				Console.Write("-"+currentVertex );
+			}
+		}
+		
+	}
+}

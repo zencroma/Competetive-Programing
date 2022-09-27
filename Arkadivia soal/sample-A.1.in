@@ -1,0 +1,19 @@
+using System;
+
+namespace Praktikum4
+{
+	class Program
+	{
+		public static void Main(string[] args)
+		{
+			graph g = new graph();
+			g.AdjacencyMatrix();
+			g.AdjacencyList();
+			g.DegreeOfVertex();
+			g.DjikstraAlgorithm();
+
+			Console.Write("Press any key to continue . . . ");
+			Console.ReadKey(true);
+		}
+	}
+}

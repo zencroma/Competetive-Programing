@@ -1,0 +1,3 @@
+regex yang digunakan adalah [^0-9] dimana regex tersebut berfungsi untuk tidak mengecek atau menghiraukan
+expression angka integer, dan dengan fungsi replaceAll maka semua selain angka akan dihilangkan
+dan yang tersisa hanya angka integer saja
