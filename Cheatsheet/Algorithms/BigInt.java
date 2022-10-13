@@ -5,7 +5,7 @@ package Algorithms;
 
 import java.math.BigInteger; 
 
-public class GCDBigInt { 
+public class BigInt { 
 	public static int gcd(int a, int b) 
 	{ 
 		BigInteger b1 = BigInteger.valueOf(a); 
@@ -22,11 +22,25 @@ public class GCDBigInt {
 		return gcd.longValue(); 
 	} 
 
-	// Driver method 
+	// cek bilangan prima
+	public static boolean isPrime (long a, long b) 
+	{ 
+		return BigInteger.valueOf(123).isProbablePrime(1); 
+	} 
+
+	// pangkat 2
+	static boolean isPowerOfTwo (int x) { 
+		return x!=0 && ((x&(x-1)) == 0);	 
+	} 
+
+
 	public static void main(String[] args) 
 	{ 
-		System.out.println(gcd(3, 5)); 
-		System.out.println(gcd(10000000000L, 600000000L)); 
+		System.out.println(gcd(5, 7)); 
+		System.out.println(gcd(123456789L, 555555555L)); 
+
+		// jumlah digit
+		int numDigit = Math.floor(Math.log10(N)) + 1;
 	} 
 }
 
